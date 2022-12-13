@@ -1,16 +1,16 @@
 from django.shortcuts import render
 
-from animals.models import Animal
+from animals.models import Food
 
 
 def main_page(request):
-    animals = Animal.objects.all()
+    foods = Food.objects.all()
     context = {
         # 'animals': [
         #     {'kind': 'monkey'},
         #     {'kind': 'bear'},
         #     {'kind': 'rabbit'},
         # ],
-        'animals': animals
+        'foods': foods
     }
     return render(request, 'animals/index.html', context=context)
