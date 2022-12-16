@@ -14,8 +14,9 @@ class Animal(models.Model):
     # CASCADE, PROTECT, NULL
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     # kind = models.CharField('kind', max_length=64)
-    age = models.IntegerField(verbose_name='age', default=0)
+    age = models.IntegerField(verbose_name='age', default=1)
     desc = models.TextField(verbose_name='description', blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.name} ({self.category.name})'

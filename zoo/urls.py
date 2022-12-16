@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from animals.views import main_page
+from animals import views
 
 urlpatterns = [
-    path('', main_page),
+    path('', views.main_page),
     path('admin/', admin.site.urls),
+    path('animals/', views.AnimalListView.as_view(), name='animals'),
+    path('animals/<int:pk>/', views.AnimalDetailView.as_view(), name='animal'),
+    path('animals/create/', views.AnimalCreateView.as_view(), name='animal_create'),
+    path('animals/update/<int:pk>/', views.AnimalUpdateView.as_view(), name='animal_update'),
+    path('animals/delete/<int:pk>/', views.AnimalDeleteView.as_view(), name='animal_delete'),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
