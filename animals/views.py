@@ -1,9 +1,11 @@
+import celery.result
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from animals.models import Food, Animal
 from .forms import AnimalModelForm
+from .tasks import get_request_info, notify
 
 
 def main_page(request):
@@ -53,6 +55,7 @@ class AnimalDetailView(DetailView):
 # redirect
 # FORM
 
+
 class AnimalCreateView(CreateView):
     model = Animal
     # fields = ('name', 'category', 'age', 'desc')
@@ -60,11 +63,25 @@ class AnimalCreateView(CreateView):
     form_class = AnimalModelForm
     success_url = reverse_lazy('animals')
 
-    # def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        get_request_info.delay(url=request.path, method=request.method)
+        return super().post(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        get_request_info.delay(url=request.path, method=request.method)
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        print('Делаем что то с формой перед сохранением', form)
+        # print('Делаем что то с формой перед сохранением', form)
+        #new_animal = form.save()
+        #notify(new_animal)
         return super().form_valid(form)
+
+    def get_success_url(self):
+        task = notify.delay(self.object.name, self.object.category.name)
+        print('ID', task.id)
+        get_request_info.delay(url='TEST', method='TEST')
+        return super().get_success_url()
 
     #def form_invalid(self, form):
 
@@ -80,3 +97,17 @@ class AnimalUpdateView(UpdateView):
 class AnimalDeleteView(DeleteView):
     model = Animal
     success_url = reverse_lazy('animals')
+
+
+class TaskResultTemplateView(TemplateView):
+    template_name = 'animals/task_result.html'
+
+    def get(self, request, *args, **kwargs):
+        self.task_id = kwargs['task_id']
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        task = celery.result.AsyncResult(id=self.task_id)
+        context['task'] = task
+        return context

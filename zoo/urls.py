@@ -26,5 +26,6 @@ urlpatterns = [
     path('animals/create/', views.AnimalCreateView.as_view(), name='animal_create'),
     path('animals/update/<int:pk>/', views.AnimalUpdateView.as_view(), name='animal_update'),
     path('animals/delete/<int:pk>/', views.AnimalDeleteView.as_view(), name='animal_delete'),
+    path('animals/task-result/<str:task_id>/', views.TaskResultTemplateView.as_view(), name='task_result'),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
