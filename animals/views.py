@@ -1,4 +1,6 @@
 import celery.result
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
@@ -8,6 +10,7 @@ from .forms import AnimalModelForm
 from .tasks import get_request_info, notify
 
 
+@login_required
 def main_page(request):
     foods = Food.objects.all()
     context = {
@@ -37,7 +40,7 @@ class AnimalListView(ListView):
     def get_queryset(self):
         return Animal.objects.filter(is_active=True)
 
-class AnimalDetailView(DetailView):
+class AnimalDetailView(LoginRequiredMixin, DetailView):
     model = Animal
 
     # def get_queryset(self):
@@ -56,12 +59,15 @@ class AnimalDetailView(DetailView):
 # FORM
 
 
-class AnimalCreateView(CreateView):
+class AnimalCreateView(UserPassesTestMixin, CreateView):
     model = Animal
     # fields = ('name', 'category', 'age', 'desc')
     # fields = '__all__'
     form_class = AnimalModelForm
     success_url = reverse_lazy('animals')
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.is_superuser
 
     def post(self, request, *args, **kwargs):
         get_request_info.delay(url=request.path, method=request.method)
@@ -86,15 +92,17 @@ class AnimalCreateView(CreateView):
     #def form_invalid(self, form):
 
 
-class AnimalUpdateView(UpdateView):
+class AnimalUpdateView(PermissionRequiredMixin, UpdateView):
     model = Animal
+    permission_required = 'animals.change_animal'
     # fields = ('name', 'category', 'age', 'desc')
     # fields = '__all__'
     form_class = AnimalModelForm
     success_url = reverse_lazy('animals')
 
 
-class AnimalDeleteView(DeleteView):
+class AnimalDeleteView(PermissionRequiredMixin, DeleteView):
+    permission_required = 'animals.delete_animal'
     model = Animal
     success_url = reverse_lazy('animals')
 

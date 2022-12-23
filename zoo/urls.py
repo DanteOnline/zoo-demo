@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 from animals import views
+from users.views import RegistrationView, \
+    UserLoginView, \
+    UserLogoutView, \
+    UserDetailView, UserTemplateView
 
 urlpatterns = [
     path('', views.main_page),
@@ -28,4 +32,10 @@ urlpatterns = [
     path('animals/delete/<int:pk>/', views.AnimalDeleteView.as_view(), name='animal_delete'),
     path('animals/task-result/<str:task_id>/', views.TaskResultTemplateView.as_view(), name='task_result'),
     path('__debug__/', include('debug_toolbar.urls')),
+    # users
+    path('users/create/', RegistrationView.as_view(), name='registration'),
+    path('users/login/', UserLoginView.as_view(), name='login'),
+    path('users/logout/', UserLogoutView.as_view(), name='logout'),
+    path('users/account/<int:pk>/', UserDetailView.as_view(), name='account'),
+    path('users/user-profile/', UserTemplateView.as_view(), name='user_profile'),
 ]

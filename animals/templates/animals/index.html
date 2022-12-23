@@ -1,7 +1,7 @@
 {% extends 'root.html' %}
 
 {% block content %}
-    <h1>Hello, {{ user.username|default:"Stranger" }}!</h1>
+    <h1>Hello, {{ user.username|default:"Guest" }}!</h1>
     <ul>
         {% for food in foods %}
         <li>

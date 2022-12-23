@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     # my
     'animals',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,8 @@ INTERNAL_IPS = [
 # DEBUG EMAILS
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'tmp/app-messages'
+
+# AUTH
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/users/login/'
+LOGOUT_REDIRECT_URL = '/'

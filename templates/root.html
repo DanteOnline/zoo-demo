@@ -12,7 +12,19 @@
 <body>
 <ul>
     <li>
+        <a href="/">Главная</a>
         <a href="{% url 'animals' %}">Животные</a>
+
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'account' pk=user.pk %}">Личный кабинет {{user.username}}</a>
+            <a href="{% url 'user_profile' %}">User profile</a>
+            <a href="{% url 'logout' %}">Выход</a>
+        {% else %}
+            <a href="{% url 'registration' %}">Регистрация</a>
+            <a href="{% url 'login' %}">Вход</a>
+        {% endif %}
+
     </li>
 </ul>
 <div class="container">
