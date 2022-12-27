@@ -24,6 +24,7 @@
         {{help_text}}
     </p>
 
+<a class="btn btn-primary" href="{% url 'animal_create' %}">Создать</a>
 {% if user.is_superuser or user.is_staff %}
     <a class="btn btn-primary" href="{% url 'animal_create' %}">Создать</a>
 {% endif %}

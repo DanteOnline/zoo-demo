@@ -40,7 +40,9 @@ class AnimalListView(ListView):
     def get_queryset(self):
         return Animal.objects.filter(is_active=True)
 
-class AnimalDetailView(LoginRequiredMixin, DetailView):
+    # def get(self, request, *args, **kwargs):
+    #     pass
+class AnimalDetailView(DetailView):
     model = Animal
 
     # def get_queryset(self):
