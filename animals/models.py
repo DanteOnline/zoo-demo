@@ -5,6 +5,7 @@ from django.db import models
 # Бурый Медведь, Белый медведь
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
+    code = models.CharField(max_length=4, blank=True, null=True)
 
     def __str__(self):
         return self.name

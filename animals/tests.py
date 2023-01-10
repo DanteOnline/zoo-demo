@@ -1,13 +1,14 @@
 from django.test import TestCase
 from .models import Category, Animal, Card
 import time
+from mixer.backend.django import mixer
 
 # Create your tests here.
 class TestCategory(TestCase):
 
 
     def setUp(self) -> None:
-        self.category = Category.objects.create(name='Попугай')
+        self.category = mixer.blend(Category, name='Попугай')
         print('Я выполняюсь ПЕРЕД каждым тестом')
 
     def tearDown(self) -> None:
@@ -34,10 +35,9 @@ class TestCategory(TestCase):
 class TestAnimal(TestCase):
 
     def test_str(self):
-        print('SLEEP')
-        time.sleep(120)
-        category = Category.objects.create(name='Попугай')
-        animal = Animal.objects.create(name='Кеша', category=category)
+        # category = Category.objects.create(name='Попугай')
+        # animal = Animal.objects.create(name='Кеша', category=category)
+        animal = mixer.blend(Animal, name='Кеша')
         self.assertEqual(str(animal), 'Кеша')
 
 

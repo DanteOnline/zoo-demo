@@ -10,9 +10,10 @@ from .forms import AnimalModelForm
 from .tasks import get_request_info, notify
 
 
-@login_required
+# @login_required
 def main_page(request):
-    foods = Food.objects.all()
+    # foods = Food.objects.all().prefetch_related('animals', 'animals__category')
+    foods = Food.objects.all().prefetch_related('animals__category')
     context = {
         # 'animals': [
         #     {'kind': 'monkey'},
@@ -38,7 +39,7 @@ class AnimalListView(ListView):
         return context
 
     def get_queryset(self):
-        return Animal.objects.filter(is_active=True)
+        return Animal.objects.filter(is_active=True).select_related('category')
 
     # def get(self, request, *args, **kwargs):
     #     pass

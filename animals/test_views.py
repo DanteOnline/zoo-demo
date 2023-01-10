@@ -37,8 +37,9 @@ class TestAnimalListView(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
         # Создаем пользователя
+        # User.objects.all().delete()
         user = User.objects.create_user(username='user', email='user@email.com', password='user123456')
-        user = User.objects.create_superuser(username='user', email='user@email.com', password='user123456')
+        # user = User.objects.create_superuser(username='user', email='user@email.com', password='user123456')
         self.client.login(username='user', password='user123456')
         # Авторизованный запрос
         response = self.client.get('/')
